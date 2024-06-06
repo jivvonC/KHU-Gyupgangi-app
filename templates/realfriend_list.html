@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+    <title>Real Friend List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 친구 요청 알림 처리
+            var notifications = JSON.parse('{{ notifications|tojson|safe }}');
+            notifications.forEach(function(notification) {
+                var modalId = 'modal_' + notification.sender_id;
+                var modalHtml = `
+                    <div id="${modalId}" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="closeModal('${modalId}')">&times;</span>
+                            <p>${notification.message}</p>
+                            <button onclick="goToFriendList()">친구리스트 바로가기</button>
+                            <button onclick="goBack()">뒤로 돌아가기</button>
+                        </div>
+                    </div>
+                `;
+                $('body').append(modalHtml);
+                $('#' + modalId).show();
+            });
+        });
+
+        function goToFriendList() {
+            window.location.href = "/realfriend_list";
+        }
+
+        function goBack() {
+            window.location.href = "/friend_list";
+        }
+
+        function closeModal(modalId) {
+            $('#' + modalId).remove();
+        }
+
+        function acceptFriend(senderId, modalId) {
+            $.post("/accept_friend_request", { sender_id: senderId }, function(response) {
+                if (response.success) {
+                    $('#' + modalId).remove(); // 모달 창 닫기
+                    location.reload(); // 페이지 새로고침
+                } else {
+                    alert("친구 요청 수락에 실패했습니다.");
+                }
+            });
+        }
+
+        function declineFriend(modalId) {
+            $('#' + modalId).remove(); // 모달 창 닫기
+            alert("친구 요청이 보류되었습니다.");
+        }
+
+        function acceptPendingFriend(friendId) {
+            $.post("/accept_pending_friend_request", { friend_id: friendId }, function(response) {
+                if (response.success) {
+                    var message = response.message;
+                    var modalId = 'modal_pending_' + friendId;
+                    var modalHtml = `
+                        <div id="${modalId}" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeModal('${modalId}')">&times;</span>
+                                <p>${message}</p>
+                            </div>
+                        </div>
+                    `;
+                    $('body').append(modalHtml);
+                    $('#' + modalId).show();
+                    location.reload(); // 페이지 새로고침
+                } else {
+                    alert("친구 요청 수락에 실패했습니다.");
+                }
+            });
+        }
+    </script>
+    <style>
+        /* 모달 스타일 */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>수락대기 친구 리스트</h1>
+    <ul>
+        {% for friend in pending_friends %}
+            <li>{{ friend.name }} <button onclick="acceptPendingFriend('{{ friend.id }}')">요청 수락</button></li>
+        {% endfor %}
+    </ul>
+
+    <h1>수락한 친구 리스트</h1>
+    <ul>
+        {% for friend in accepted_friends %}
+            <li>{{ friend.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('friend_chat') }}">채팅으로 가기</a>
+    <a href="{{ url_for('hello') }}">Hello 페이지로 돌아가기</a>
+</body>
+</html>

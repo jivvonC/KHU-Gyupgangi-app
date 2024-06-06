@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+    <title>채팅</title>
+    <style>
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .message {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 10px;
+            max-width: 60%;
+            word-wrap: break-word;
+        }
+        .message.sender {
+            align-self: flex-end;
+            background-color: #dcf8c6;
+            text-align: right;
+        }
+        .message.recipient {
+            align-self: flex-start;
+            background-color: #f1f0f0;
+            text-align: left;
+        }
+        .chat-input {
+            display: flex;
+            margin-top: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .chat-input button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container" id="chat-messages">
+        {% for message in chat_history %}
+        <div class="message {% if message.sender_id == session.get('userID') %}sender{% else %}recipient{% endif %}">
+            {{ message.message }} <br>
+            <small>{{ message.timestamp }}</small>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="chat-input">
+        <input id="chat-input" type="text" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <div class="back-link">
+        <a href="{{ url_for('friend_chat') }}">친구 목록으로 돌아가기</a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var socket = io();
+        var userId = '{{ session.get("userID") }}';
+        var friendId = '{{ friend_id }}';
+        var currentRoom = friendId;
+
+        socket.emit('join', { room: currentRoom });
+
+        function sendMessage() {
+            var message = document.getElementById('chat-input').value;
+            socket.emit('message', { room: currentRoom, message: message, sender_id: userId });
+            document.getElementById('chat-input').value = '';
+        }
+
+        socket.on('message', function (data) {
+            var messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add(data.sender_id === userId ? 'sender' : 'recipient');
+            messageElement.innerHTML = data.message + '<br><small>' + new Date().toLocaleTimeString() + '</small>';
+            document.getElementById('chat-messages').appendChild(messageElement);
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+        });
+    </script>
+</body>
+</html>

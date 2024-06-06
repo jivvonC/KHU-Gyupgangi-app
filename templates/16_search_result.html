@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+    <h1>과목 검색 결과</h1>
+    <h3>다음 중 과목을 선택하세요!</h3>
+    <body>
+        <form action = "{{ url_for('addsubject')}}" method = 'POST'>
+            {%for row in rows%}
+            <input type="radio" id= "html" name= "subject" value= {{row["id"]}}>
+            <label for="html">{{row["id"]}}/{{row["name"]}}/{{row["prof"]}}/{{row["time1"]}}/{{row["time2"]}}/{{row["credits"]}}학점/{{row["year"]}}학년</label><br>
+            {%endfor%}
+            <input type="submit"/>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,38 @@
+{% with messages = get_flashed_messages()%}
+    {%if messages%}
+    <script>
+        alert("{{messages[-1]}}")
+    </script>
+    {%endif%}
+{%endwith%}
+
+<!doctype html>
+<html>
+    <h1>회원 가입</h1>
+    <body>
+        <form action = "{{ url_for('addmem')}}" method = 'POST'>
+            <p>아이디<br/>
+                <input type = "text" name = "id" required/>
+            </p>
+            <p>비밀번호<br/>
+                <input type = "text" name = "password1" required/>
+            </p>
+            <p>비밀번호 확인<br/>
+                <input type = "text" name = "password2" required/>
+            </p>
+            <p>E-mail<br/>
+                <input type = "email" name = "email" required/>
+            </p>
+            <p>사용자 이름<br/>
+                <input type = "text" name = "username" required/>
+            </p>
+            <p>별명<br/>
+                <input type = "text" name = "nickname" required/>
+            </p>
+            <input type="submit" value="회원가입"/>
+        </form>
+        <br>
+        <br>
+        <p><a href="/">시작화면으로 돌아가기</a></p>
+    </body>
+</html>

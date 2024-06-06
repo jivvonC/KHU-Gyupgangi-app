@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+    <title>Notification History</title>
+    <style>
+        .notification-block {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>알림 내역</h1>
+    {% for notification in notifications %}
+        <div class="notification-block">
+            <p>{{ notification.MESSAGE }}</p>
+        </div>
+    {% endfor %}
+    <a href="{{ url_for('home') }}">홈으로 돌아가기</a>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+    <title>Friend List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function acceptFriend(friendId) {
+            $.post("/accept_friend", {friend_id: friendId}, function(data) {
+                if (data.success) {
+                    alert("친구신청 완료");
+                    $("#accept-button-" + friendId).text("신청완료");
+                    $("#accept-button-" + friendId).prop("disabled", true);
+                } else {
+                    alert("친구신청 실패: " + data.error);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>친구 리스트</h1>
+    <ul>
+        {% for friend in friends %}
+            <li>
+                {{ friend.name }}
+                {% if friend.friend_status < 2 %}
+                    <button id="accept-button-{{ friend.id }}" onclick="acceptFriend('{{ friend.id }}')">친구신청</button>
+                {% else %}
+                    <button disabled>신청완료</button>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('hello') }}">Hello 페이지로 돌아가기</a>
+</body>
+</html>

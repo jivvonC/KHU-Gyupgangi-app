@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+    <h1>프로필 수정하기</h1>
+    <body>
+        <form action = "{{ url_for('updateprof')}}" method = 'POST'>
+            <p>별명<br/>
+                <input type = "text" name = "nickname" required/>
+            </p>
+            <p>한 줄 소개<br/>
+                <textarea name= "intro" required></textarea>
+            </p>
+            <p>학번<br/>
+                <input type = "text" name = "year" list = "yearList" required/>
+                <datalist id="yearList">
+                    <option value="24학번"></option>
+                    <option value="23학번"></option>
+                    <option value="22학번"></option>
+                    <option value="21학번"></option>
+                    <option value="20학번"></option>
+                    <option value="19학번 이하"></option>
+                </datalist>
+            </p>
+            <p>성별<br/>
+                <input type = "text" name = "sex" list = "sexList" required/>
+                <datalist id = "sexList">
+                    <option value="남성"></option>
+                    <option value="여성"></option>
+                    <option value="선택 안 함"></option>
+                </datalist>
+            </p>
+            <p>전공<br/>
+                <select onchange="categoryChange(this)" name="major1">
+                    <option>단과대학</option>
+                    <option value="공과대학">공과대학</option>
+                    <option value="전자정보대학">전자정보대학</option>
+                    <option value="소프트웨어융합대학">소프트웨어융합대학</option>
+                    <option value="응용과학대학">응용과학대학</option>
+                    <option value="생명과학대학">생명과학대학</option>
+                    <option value="국제대학">국제대학</option>
+                    <option value="외국어대학">외국어대학</option>
+                    <option value="예술·디자인대학">예술·디자인대학</option>
+                    <option value="체육대학">체육대학</option>
+                    <option value="동서의과학과">동서의과학과</option>
+                </select>
+                
+                <select id="good" name="major2">
+                <option>학과</option>
+                </select>
+                <script>
+                function categoryChange(e) {
+                    var good_a = ["기계공학과", "산업경영공학과","원자력공학과","화학공학과","정보전자신소재공학과","사회기반시스템공학과","건축공학과","환경공학과","건축학과"];
+                    var good_b = ["전자공학과", "반도체공학과","생체의공학과"];
+                    var good_c = ["컴퓨터공학과","인공지능학과","소프트웨어융합학과"];
+                    var good_d = ["응용수학과","응용물리학과", "응용화학과","우주과학과"];
+                    var good_e = ["유전생명공학과","식품생명공학과","한방생명공학과","식물·환경신소재공학과","원예생명공학과","스마트팜과학과"]
+                    var good_f = ["국제학과","글로벌한국학과"]
+                    var good_g = ["프랑스어학과","스페인어학과","러시아어학과","중국어학과","일본어학과","한국어학과","글로벌커뮤니케이션학과"]
+                    var good_h = ["산업디자인학과","시각디자인학과","환경조경디자인학과","의류디자인학과","디지털콘텐츠학과","포스트모던음악학과","연극영화학과","도예학과"]
+                    var good_i = ["체육학과","스포츠지도학과","스포츠의학과","골프산업학과","태권도학과"]
+                    var good_j = ["동서의과학과"]
+                    var target = document.getElementById("good");
+                
+                    if(e.value == "공과대학") var d = good_a;
+                    else if(e.value == "전자정보대학") var d = good_b;
+                    else if(e.value == "소프트웨어융합대학") var d = good_c;
+                    else if(e.value == "응용과학대학") var d = good_d;
+                    else if(e.value == "생명과학대학") var d = good_e;
+                    else if(e.value == "국제대학") var d = good_f;
+                    else if(e.value == "외국어대학") var d = good_g;
+                    else if(e.value == "예술·디자인대학") var d = good_h;
+                    else if(e.value == "체육대학") var d = good_i;
+                    else if(e.value == "동서의과학과") var d = good_j;
+                    
+                
+                    target.options.length = 0;
+                
+                    for (x in d) {
+                        var opt = document.createElement("option");
+                        opt.value = d[x];
+                        opt.innerHTML = d[x];
+                        target.appendChild(opt);
+                    }
+                }
+                </script>
+            </p>
+
+            <input type="submit" value="수정하기"/>
+        </form>
+    </body>
+</html>

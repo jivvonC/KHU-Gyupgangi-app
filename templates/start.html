@@ -1,0 +1,24 @@
+{% with messages = get_flashed_messages()%}
+    {%if messages%}
+    <script>
+        alert("{{messages[-1]}}")
+    </script>
+    {%endif%}
+{%endwith%}
+
+{% if login == True%}
+<h3> 로그인에 성공했습니다. {{username}}님 어서오세요!</h3>
+<a href= {{url_for("logout")}}>로그아웃</a>
+<a href= {{url_for("hello")}}>겹강이 시작</a>
+
+{%else%}
+<h1>겹강이</h1>
+<h3>겹강이에 오신걸 환영합니다👋<br>
+    서비스 이용을 위해서 로그인을 해주세요😊</h3>
+<form methods = "get" id= "login" action = {{url_for("login")}}> 
+    <input type="id" id="loginId" name="loginId" placeholder="ID">
+    <input type="password" id="loginPw" name="loginPw" placeholder="Password">
+    <button type="submit" class="login">로그인</button>
+</form>
+<p>아직 회원이 아니신가요? <a href="/regmember"><button>회원가입</button></a>
+{%endif%}

@@ -1,0 +1,120 @@
+{% with messages = get_flashed_messages()%}
+    {%if messages%}
+    <script>
+        alert("{{messages[-1]}}")
+    </script>
+    {%endif%}
+{%endwith%}
+
+<!doctype html>
+<html>
+    <style>
+        table {
+            border : 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12px; /* 폰트 크기 조정 */
+        }
+        
+        th, td {
+            border: none;
+            text-align: center;
+            height: 10px; /* 높이를 10px로 조정 */
+            padding: 2px; /* 셀 안쪽 여백 조정 */
+        }
+        
+        th {
+            background-color: lightgray; /* 헤더 배경색 변경 */
+            border: 1px solid black;
+        }
+        
+        .class-cell {
+            background-color: lightblue; /* 시간표 셀의 배경색 변경 */
+        }
+        .sameclass-ceil{
+            background-color: pink;
+        }
+        
+        .time-cell {
+            border: 1px solid black;
+            vertical-align: top; /* 셀 내용 위쪽 정렬 */
+        }
+    </style>
+    <h1>내 프로필</h1>
+    <body>
+        <img src="static/img/profile.png" width="100"><p><b>별명:</b> {{row["mem_nickname"]}}</p>
+        <p><b>친구 id:</b> {{row["mem_name"]}}/<ins>{{row["mem_id"]}}</ins></p>
+        <p><b>경희대학교 국제캠퍼스</b>
+        <hr/>
+        <br>
+        <p><b>한 줄 소개</b></p><br>
+        <p>{{row["mem_intro"]}}</p><br>
+        <p><b>학번</b></p><br>
+        <p>{{row["mem_year"]}}</p><br>
+        <p><b>성별</b></p><br>
+        <p>{{row["mem_sex"]}}</p><br>
+        <p><b>전공</b></p><br>
+        <p>{{row["mem_maj_1"]}}/{{row["mem_maj_2"]}}</p>
+
+        <table border="1">
+            <caption style="font-size: 14px;">2024년 1학기</caption>
+            <tr>
+                <th>시간</th>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+            </tr>
+            
+            {% set checkMon = check.copy() %}
+            {% set checkTue = check.copy() %}
+            {% set checkWed = check.copy() %}
+            {% set checkThu = check.copy() %}
+            {% set checkFri = check.copy() %}
+
+            {% for hour in range(9, 19) %}
+                {% for minute in range(0, 60, 5) %}
+                <tr>
+                    {% if minute == 0 %}
+                        <td class="time-cell" rowspan="12">{{ "%02d:00" | format(hour) }}</td>
+                    {% endif %}
+
+                    {% for day, checkDay in [('월', checkMon), ('화', checkTue), ('수', checkWed), ('목', checkThu), ('금', checkFri)] %}
+                        {% set ind = (hour - 9) * 12 + minute // 5 %}
+                        {% set lecture = result[day][ind] %}
+                        {% if lecture %}
+                            {% if lecture['number'] in checkDay %}
+                                {% set check_index = checkDay.index(lecture['number']) %}
+                                {% set check_item = checkDay.pop(check_index) %}
+                                {% if result[day][ind] == result[day][ind + 1] %}
+                                    {% if lecture['number'] in my_check %}
+                                        <td class="sameclass-ceil" rowspan="{{ lecture['unit'] }}">{{ lecture['subject'] }}, {{ lecture['teacher'] }}, 겹강</td>
+                                        
+                                    {% else %}
+                                        <td class="class-cell" rowspan="{{ lecture['unit'] }}">{{ lecture['subject'] }}, {{ lecture['teacher'] }}</td>
+                                    {% endif %}
+                                
+                                    
+                                {% else %}
+                                    <td class="class-cell">2</td>
+                                {% endif %}
+                            {% else %}
+                                {% if result[day][ind] == result[day][ind - 1] %}
+                                    {# 병합된 행의 경우 빈 셀을 출력하지 않음 #}
+                                {% else %}
+                                    <td class="class-cell">4</td>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+
+
+    </body>
+</html>

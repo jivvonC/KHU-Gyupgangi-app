@@ -1,0 +1,27 @@
+{% with messages = get_flashed_messages()%}
+    {%if messages%}
+    <script>
+        alert("{{messages[-1]}}")
+    </script>
+    {%endif%}
+{%endwith%}
+
+<!doctype html>
+<html>
+    <h1>내 프로필</h1>
+    <body>
+        <img src="static/img/profile.png" width="100"><p><b>별명:</b> {{row["mem_nickname"]}}</p>
+        <p><b>친구 id:</b> {{row["mem_name"]}}/<ins>{{row["mem_id"]}}</ins></p>
+        <p><b>경희대학교 국제캠퍼스</b>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="/enternewprof"><button>수정하기</button></a></p>
+        <hr/>
+        <br>
+        <p><b>한 줄 소개</b></p><br>
+        <p>{{row["mem_intro"]}}</p><br>
+        <p><b>학번</b></p><br>
+        <p>{{row["mem_year"]}}</p><br>
+        <p><b>성별</b></p><br>
+        <p>{{row["mem_sex"]}}</p><br>
+        <p><b>전공</b></p><br>
+        <p>{{row["mem_maj_1"]}}/{{row["mem_maj_2"]}}</p>
+    </body>
+</html>

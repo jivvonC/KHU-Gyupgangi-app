@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <title>친구 채팅</title>
+    <style>
+        .friend-block {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .friend-block img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .friend-block .details {
+            flex: 1;
+        }
+        .navigation-links {
+            display: flex;
+            align-items: center;
+        }
+        .navigation-links a {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>친구</h1>
+    <div class="navigation-links">
+        <p>채팅방 쫘라락~~</p>
+        <a href="{{ url_for('realfriend_list') }}">수락된 친구 리스트로 돌아가기</a>
+    </div>
+    <div id="friends-list">
+        {% for friend in friends %}
+        <div class="friend-block" onclick="location.href='/chat/{{ friend.id }}'">
+            <img src="{{ url_for('static', filename=friend.profile_pic) }}" alt="Profile Picture">
+            <div class="details">
+                <p>{{ friend.name }}</p>
+                <p>Last message: {{ friend.last_message }}</p>
+                <p>Timestamp: {{ friend.last_timestamp }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

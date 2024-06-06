@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <title>Home</title>
+    <style>
+        .notification-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>경희대학교</h1>
+    <span class="notification-icon" onclick="window.location.href='/notification_history'">🔔</span>
+    <br><br>
+    <a href="{{ url_for('hello') }}">Hello 페이지로 이동</a>
+    <br><br>
+    <p>오늘의 수업</p>
+    <br>
+    <p>바로가기</p>
+    <br>
+    <p>그룹</p>
+</body>
+</html>

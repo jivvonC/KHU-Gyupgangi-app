@@ -1,0 +1,21 @@
+{% with messages = get_flashed_messages()%}
+    {%if messages%}
+    <script>
+        alert("{{messages[-1]}}")
+    </script>
+    {%endif%}
+{%endwith%}
+
+<!doctype html>
+<html>
+    <h1>강의 검색</h1>
+    <h3>검색창에 강의명을 입력하세요!<br>
+    정확한 강의명을 띄어쓰기 없이 입력해야 검색이 가능합니다!</h3>
+    <body>
+        <form action = "{{ url_for('search')}}" method = 'POST'>
+                <input type = "text" name = "query" placeholder='강의명을 검색하세요'required/>
+            <input type="submit" value='검색하기'/>
+        </form>
+    </body>
+</html>
+
